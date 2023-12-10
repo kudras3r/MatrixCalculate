@@ -1,0 +1,79 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  Home Page
+{% endblock %}
+
+{% block styles %}
+
+{% endblock %}
+
+{% block content %}
+<section>
+  <div class="container w-50">
+      <div class="row">
+          <div class="matrix-1 col-4">
+            <form method="POST" action="/">
+                
+                <input type="text">
+                <input type="text">
+
+                <table class="table">
+                    <tbody>
+                        {{ form.hidden_tag() }}
+                        <tr>
+                            <td> {{ form.num1_00() }} </td>
+                            <td> {{ form.num1_01() }} </td>
+                            <td> {{ form.num1_02() }} </td>
+                        </tr>
+                        <tr>
+                            <td> {{ form.num1_10() }} </td>
+                            <td> {{ form.num1_11() }} </td>
+                            <td> {{ form.num1_12() }} </td>
+                        </tr>
+                        <tr>
+                            <td> {{ form.num1_20() }} </td>
+                            <td> {{ form.num1_21() }} </td>
+                            <td> {{ form.num1_22() }} </td>
+                        </tr>
+                    </tbody>
+                </table>
+            
+                
+                {{ form.plus() }}
+                {{ form.umn() }}
+                {{ form.minus() }}
+          </div>
+      </div>
+      <div class="row">
+        <div class="matrix-1 col-4">
+                <input type="text">
+                <input type="text">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td> {{ form.num2_00() }} </td>
+                            <td> {{ form.num2_01() }} </td>
+                            <td> {{ form.num2_02() }} </td>
+                        </tr>
+                        <tr>
+                            <td> {{ form.num2_10() }} </td>
+                            <td> {{ form.num2_11() }} </td>
+                            <td> {{ form.num2_12() }} </td>
+                        </tr>
+                        <tr>
+                            <td> {{ form.num2_20() }} </td>
+                            <td> {{ form.num2_21() }} </td>
+                            <td> {{ form.num2_22() }} </td>
+                        </tr>
+                    </tbody>
+                </table>
+          </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}
+
