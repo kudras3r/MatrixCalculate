@@ -1,10 +1,14 @@
 
+from config import CALC_PATH
 from app import app
+from helpers import Buffer
 from datetime import datetime
 from flask import render_template, request, redirect, url_for, abort
-from forms import MatrixForm, NumInput, Matrix
-from logic import Matrix
-from werkzeug.exceptions import BadRequest
+import sys
+
+sys.path.insert(0, CALC_PATH)
+from calculate import Matrix
+
 
 def logRequest(request):
     with open('sessions.log', 'a') as file:
@@ -29,31 +33,33 @@ def index():
 
 @app.route('/calc', methods=["POST", "GET"])
 def calc():
-    try:
-        firstMatrixData: list = [int(x) if x != '' else 0 for x in request.form.getlist('num1[]')]
-        secondMatrixData: list = [int(x) if x != '' else 0 for x in request.form.getlist('num2[]')]
-    except ValueError:
-        abort(400)
-    operation: str = request.form['oper']
-    #firstMatrix = Matrix(firstMatrixData, 4, 2) # ПОКА ЧТО 3 на 3
-    #secondMatrix = Matrix(secondMatrixData, 3, 3) # ПОКА ЧТО 3 на 3
+
+    buffer = Buffer()
     
-    if operation == '➕':
-        print(firstMatrixData)
-        
-        #res = firstMatrix.calculate('➕', secondMatrix)
-        #print(firstMatrix.getItem(1, 1))
-        #firstMatrix.setItem(0, 0, 5)
-        #a = firstMatrix.getItem(0, 0)
-        #print(a)
-     #   a = firstMatrix.calculate('➕', secondMatrix)
-     #   print(a)
-        #print(firstMatrix.getItem(1, 1))
-        #print(firstMatrixData)
-        pass
-        
+    buffer.getRequestData(request)
+    buffer.sizeUnpack()
     
-    return render_template('calc1.html', nums=[[0,0,0],[0,0,0],[0,0,0]])
+    firstMatrix = Matrix(buffer.takeMatrData(1))
+    secondMatrix = Matrix(buffer.takeMatrData(2))
+    
+    if buffer.operation == '➕':
+        data = firstMatrix.summation(secondMatrix)
+        if data != '400':
+            rows, cols = data['rows'], data['rows']
+            matr = data['matr']
+        else:
+            response = 'Size error!'
+            return render_template('error.html', code='400', response=response)
+    
+    elif buffer.operation == '✖':
+        data = firstMatrix.multiply(secondMatrix)
+        if data != '400':
+            rows, cols = data['rows'], data['rows']
+            matr = data['matr']
+        else:
+            response = 'Size error!'
+            return render_template('error.html', code='400', response=response)    
+    return render_template('calc1.html', rows=data['rows'], cols=data['cols'], matrix=data['matr'])
 
 @app.errorhandler(400)
 def errorHandle(e):

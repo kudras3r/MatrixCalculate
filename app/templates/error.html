@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 
+
 {% block title %}
   Error
 {% endblock %}
+
 
 {% block styles %}
 
 {% endblock %}
 
+
 {% block content %}
 
 <div class="container-fluid h-100 w-50">
-<div class="row align-items-center h-100">
-<div class="title"><h1 align="center">Something went wrong!</h1></div>
-<div class="error-code"><h4 align="center">Error code {{ code }}</h4></div><br>
-<div class="title"><h1 align="center">{{ response }}</h1></div>
-<form action="/">
-    <div class="col-xs-6"><input value="Home" class="form-control name_list" type="submit" name="main" size="2"></div>
-</form>
-</div>
+  <div class="row align-items-center h-100">
+    <div class="title"><h1 align="center">Something went wrong!</h1></div>
+    <div class="error-code"><h4 align="center">Error code {{ code }}</h4></div><br>
+    <div class="title"><h1 align="center">{{ response }}</h1></div>
+    <form action="/">
+      <div class="col-xs-6"><input value="Home" class="form-control name_list" type="submit" name="main" size="2"></div>
+    </form>
+  </div>
 </div>
 
 {% endblock %}

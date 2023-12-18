@@ -24,10 +24,10 @@
     <div class="matrix col-2">
         <table class="table">
             <tbody>
-              {% for i in range(3) %}
+              {% for i in range(rows) %}
               <tr>
-                {% for j in range(3) %}
-                  <td><h3>{{ nums[i][j] }}</h3></td>
+                {% for j in range(cols) %}
+                  <td><h3>{{ matrix[i][j] }}</h3></td>
                 {% endfor %}
               </tr>      
               {% endfor %}
