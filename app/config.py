@@ -1,8 +1,14 @@
+import os
+
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 class Config(object):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///users.db'
-    SECRET_KEY = 'GAHasf5128'
-    # 'mysql+mysqlconnector://root:1@localhost/users'
-    
-CALC_PATH = '/home/kudras3r/code/projects/python/matrix_calculate/calc'
+    SQLALCHEMY_DATABASE_URI = "sqlite:///users.db"
+    SECRET_KEY = os.getenv("SECRET_KEY")
+
+
+CALC_PATH = os.getenv("CALC_PATH")

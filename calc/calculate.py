@@ -1,13 +1,14 @@
-
 import numpy as np
+#from numpy import LinAlgError
+
 
 class Matrix:
     def __init__(self, data: dict):
-        self.nums = data['nums']
-        self.rows = data['rows']
-        self.cols = data['cols']
+        self.nums = data["nums"]
+        self.rows = data["rows"]
+        self.cols = data["cols"]
+
         def matrInit():
-            print(data)
             matr = []
             i = 0
             for row in range(self.rows):
@@ -17,38 +18,79 @@ class Matrix:
                     i += 1
                 matr.append(line)
             return np.array(matr)
-        self.matrix = matrInit() 
 
-    
+        self.matrix = matrInit()
+
     def summation(self, matr2):
+        data = {}
         try:
             data = {
-                'matr': np.add(self.matrix, matr2.matrix),
-                'rows': self.rows,
-                'cols': self.cols,
+                "matr": np.add(self.matrix, matr2.matrix),
+                "rows": self.rows,
+                "cols": self.cols,
+                "calc": {
+                    "code": 200,
+                },
+            }
+        except IndexError:
+            data["calc"] = {
+                "code": 400,
+                "mess": "Invalid sizing!",
             }
         except ValueError:
-            return '400'
+            data["calc"] = {
+                "code": 400,
+                "mess": "Invalid size!",
+            }
         return data
-    
+
     def multiply(self, matr2):
+        data = {}
         try:
-            rows, cols = self.rows, matr2.cols
             data = {
-                'matr': np.dot(self.matrix, matr2.matrix),
-                'rows': rows,
-                'cols': cols
+                "matr": np.dot(self.matrix, matr2.matrix),
+                "rows": self.rows,
+                "cols": matr2.cols,
+                "calc": {
+                    "code": 200,
+                },
             }
         except ValueError:
-            return '400'
+            data["calc"] = {
+                "code": 400,
+                "mess": "Invalid size!",
+            }
         return data
-        
     
-
-          
-            
+    def transpose(self):
+        data = {
+            "matr": self.matrix.transpose(),
+            "rows": self.cols,
+            "cols": self.rows,
+            "calc": {
+                "code": 200,
+            },
+        }
+        return data
     
+    def findDet(self):
+        data = {}
+        try:
+            data = {
+                "matr": self.matrix,
+                "rows": self.rows,
+                "cols": self.cols,
+                "calc": {
+                    "code": 200,
+                },
+                "det": np.linalg.det(self.matrix)
+            }
+        except np.linalg.LinAlgError:
+            data["calc"] = {
+                "code": 406,
+                "mess": "Invalid size! Det could be find only in square matrix!",
+            }
+        return data
 
 
-
-#print(a.)
+# print(a.)
