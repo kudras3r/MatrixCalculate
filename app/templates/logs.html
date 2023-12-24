@@ -1,0 +1,45 @@
+
+{% extends "base.html" %}
+
+
+{% block title %}
+  LogsView
+{% endblock %}
+
+
+{% block styles %}
+
+{% endblock %}
+
+
+{% block content %}
+<section>
+
+  <div class="container w-75 ">
+
+    <div class="row align-items-center">
+
+      <div class="title"><h1 align="center">Logs</h1></div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Date/Time</th>
+            <th scope="col">User-agent</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for log in logs %}
+            <tr>
+                <td>{{ log[0] }}</td>
+                <td>{{ log[1] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+
+    </div>
+  
+  </div>
+
+</section>
+{% endblock %}
+
