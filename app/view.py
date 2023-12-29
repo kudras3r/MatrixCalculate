@@ -1,7 +1,9 @@
 from datetime import datetime
 
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
+from flask_login import login_user
 from dotenv import load_dotenv
+from werkzeug.security import check_password_hash, generate_password_hash
 
 import sys
 import os
@@ -9,8 +11,9 @@ from config import CALC_PATH
 
 sys.path.insert(0, CALC_PATH)
 from calculate import Matrix
-from app import app
+from app import app, db
 from helpers import Buffer
+from models import User
 
 load_dotenv()
 
@@ -36,8 +39,52 @@ def viewLogs():
 @app.route("/", methods=["POST", "GET"])
 def index():
     logRequest(request=request)
-    # return redirect(url_for('mode'))
     return render_template("index.html")
+
+
+@app.route("/register", methods=["POST", "GET"])
+def register():
+    login = request.form.get("login")
+    password = request.form.get("password")
+    password2 = request.form.get("password2")
+
+    if request.method == "POST":
+        if not (login or password or password2):
+            flash("Please fill all fields!")
+        elif password2 != password:
+            flash("Passwords fields is not equal!")
+        else:
+            hash_pwd = generate_password_hash(password)
+            new_user = User(id=1223, login=login, password=hash_pwd)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for("login"))
+    return render_template("auth/register.html")
+
+
+@app.route("/login", methods=["POST", "GET"])
+def login():
+    login = request.form.get("login")
+    password = request.form.get("password")
+    print(login, type(login))
+    if login and password:
+        user = User.query.filter_by(login=login).first()
+        print(user)
+        if check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for("mode"))
+        else:
+            flash("Login or password is incorrect!")
+            return redirect(url_for("login"))
+
+    else:
+        flash("Please fill Login and Password in fields!")
+        return render_template("auth/login.html")
+
+
+@app.route("/logout", methods=["POST", "GET"])
+def logout():
+    pass
 
 
 @app.route("/mode", methods=["POST", "GET"])

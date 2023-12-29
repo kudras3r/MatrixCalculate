@@ -1,11 +1,35 @@
 {% extends "base.html" %}
 
 {% block title %}
-  login
+  Main
 {% endblock %}
 
 {% block content %}
-<form action="/mode" method="POST">
-  <div class="col-xs-6"><input value="log" class="form-control name_list" type="submit" name="login" size="2"></div>
-</form>
+
+<section>
+  
+  <div class="container w-75">
+
+    <div class="main-area row align-items-center">  
+
+      <div class="title"><h1 align="center">Welcome!</h1></div>
+      <div class="notif"><h5 style="color:darkgray" align="center">Supported by kudras3r</h5></div>
+      <div class="message">
+        <h5 align="center">
+          This project were created just for fun by one human. In the top <br/> 
+          of page you can see my nick and social media contacts. Here is <br/> 
+          the simple matrix calculator, but process of writing code for this <br/>
+          SO SMALL site is took 1 month of my life time! <br/> 
+          Thanks for attention! And now enjoy your matrix calculate.
+        </h5>
+      </div>
+      <form action="/login" method="POST">
+        <div class="col-xs-6"><input value="LLLLLEEESSSSGOUUU" class="form-control name_list" type="submit" name="login" size="2"></div>
+      </form>
+  
+    </div>
+    
+  </div>
+
+</section>
 {% endblock %}

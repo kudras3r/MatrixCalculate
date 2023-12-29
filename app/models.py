@@ -1,17 +1,13 @@
-from app import db
+from app import db, manager
+from flask_login import UserMixin
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    login = db.Column(db.String(100), unique=True)
-    password = db.Column(db.String(100))
+    login = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, id: int, login: str, password: str):
-        self.id = id
-        self.login = login
-        self.password = password
 
-    def __repr__(self):
-        return "<User id: {}, login: {}, password: {}>".format(
-            self.id, self.login, self.password
-        )
+@manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)

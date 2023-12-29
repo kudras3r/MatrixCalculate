@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+  Login
+{% endblock %}
+
+{% block content %}
+
+<section>
+  
+  <div class="container w-25">
+
+    <div class="main-area row align-items-center">  
+
+      <div class="title"><h1 align="center">Login</h1></div>
+      <div class="col-10">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class=flashes>
+            {% for message in messages %}
+              <li>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+        <form method="POST">
+          <table>
+            <tr>
+              <td>Login</td>
+              <td><input type="text" name="login" class="form-control name_list"/></td>
+           </tr>
+           <tr>
+             <td>Password</td>
+             <td><input type="password" name="password" class="form-control name_list"/></td>
+           </tr>
+           <tr>
+             <td><a class="form-control name_list" href="{{ url_for('register') }}">Registration</a></td>
+             <td><div class="col-xs-6"><input type="submit" value="Login" class="form-control name_list"/></div></td>
+            </tr>
+          </table>
+        </form>
+      </div>
+  
+    </div>
+    
+  </div>
+
+</section>
+
+{% endblock %}
