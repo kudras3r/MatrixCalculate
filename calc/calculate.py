@@ -1,5 +1,4 @@
 import numpy as np
-#from numpy import LinAlgError
 
 
 class Matrix:
@@ -9,6 +8,7 @@ class Matrix:
         self.cols = data["cols"]
 
         def matrInit():
+            print(self.nums)
             matr = []
             i = 0
             for row in range(self.rows):
@@ -35,7 +35,7 @@ class Matrix:
         except IndexError:
             data["calc"] = {
                 "code": 400,
-                "mess": "Invalid sizing!",
+                "mess": "Invalid size!",
             }
         except ValueError:
             data["calc"] = {
@@ -44,24 +44,41 @@ class Matrix:
             }
         return data
 
-    def multiply(self, matr2):
+    def multiply(self, item):
         data = {}
-        try:
-            data = {
-                "matr": np.dot(self.matrix, matr2.matrix),
-                "rows": self.rows,
-                "cols": matr2.cols,
-                "calc": {
-                    "code": 200,
-                },
-            }
-        except ValueError:
-            data["calc"] = {
-                "code": 400,
-                "mess": "Invalid size!",
-            }
+        if type(item) is not int:
+            try:
+                data = {
+                    "matr": np.dot(self.matrix, item.matrix),
+                    "rows": self.rows,
+                    "cols": item.cols,
+                    "calc": {
+                        "code": 200,
+                    },
+                }
+            except ValueError:
+                data["calc"] = {
+                    "code": 400,
+                    "mess": "Invalid size!",
+                }
+        else:
+            try:
+                data = {
+                    "matr": np.dot(item, self.matrix),
+                    "rows": self.rows,
+                    "cols": self.cols,
+                    "calc": {
+                        "code": 200,
+                    },
+                }
+            except ValueError:
+                data["calc"] = {
+                    "code": 400,
+                    "mess": "Invalid size!",
+                }
+
         return data
-    
+
     def transpose(self):
         data = {
             "matr": self.matrix.transpose(),
@@ -72,7 +89,7 @@ class Matrix:
             },
         }
         return data
-    
+
     def findDet(self):
         data = {}
         try:
@@ -83,7 +100,7 @@ class Matrix:
                 "calc": {
                     "code": 200,
                 },
-                "det": np.linalg.det(self.matrix)
+                "det": np.linalg.det(self.matrix),
             }
         except np.linalg.LinAlgError:
             data["calc"] = {
@@ -92,5 +109,24 @@ class Matrix:
             }
         return data
 
+    def inverse(self):
+        data = {}
+        try:
+            data = {
+                "matr": np.linalg.inv(self.matrix),
+                "rows": self.rows,
+                "cols": self.cols,
+                "calc": {
+                    "code": 200,
+                },
+            }
+        except:
+            data["calc"] = {
+                "code": 406,
+                "mess": "We could not find inverse matrix!",
+            }
+        return data
 
-# print(a.)
+
+#
+# pr#int(a.)

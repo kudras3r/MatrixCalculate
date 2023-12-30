@@ -16,6 +16,14 @@
 {% endblock %}
 
 
+{% block headright %}
+<button disabled type="button" class="btn btn-secondary" type="submit">Hi! {{ userName }}</button>
+<form action="/logout">
+  <div class="logout"><input value="LogOut" class="form-control name_list" type="submit" name="oper" size="2"></div>
+</form>
+{% endblock %}
+
+
 {% block content %}
 <div class="head">
   <div class="result">Your result matrix =</div>

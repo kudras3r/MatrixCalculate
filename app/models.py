@@ -7,6 +7,11 @@ class User(db.Model, UserMixin):
     login = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
 
+    def __init__(self, id, login, password):
+        self.id = id
+        self.login = login
+        self.password = password
+
 
 @manager.user_loader
 def load_user(user_id):

@@ -12,6 +12,14 @@
 {% endblock %}
 
 
+{% block headright %}
+<button disabled type="button" class="btn btn-secondary" type="submit">Hi! {{ userName }}</button>
+<form action="/logout">
+  <div class="logout"><input value="LogOut" class="form-control name_list" type="submit" name="oper" size="2"></div>
+</form>
+{% endblock %}
+
+
 {% block scripts %}
 <script type="text/javascript">
   function resizeTable(n) {
@@ -108,7 +116,7 @@
               <div class="col-xs-6"><input hidden class="form-control name_list" name="size" id="size" size="2"></div>
               <div class="col-xs-6"><input value="transpose" class="form-control name_list" type="submit" name="oper" size="2"></div>
               <div class="col-xs-6"><input value="determin" class="form-control name_list" type="submit" name="oper" size="2"></div>
-              <div class="col-xs-6"><input value="reverse" class="form-control name_list" type="submit" name="oper" size="2"></div>
+              <div class="col-xs-6"><input value="inverse" class="form-control name_list" type="submit" name="oper" size="2"></div>
             </div>
       
           </div>

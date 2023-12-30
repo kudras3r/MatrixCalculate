@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -12,7 +12,7 @@ from config import CALC_PATH
 sys.path.insert(0, CALC_PATH)
 from calculate import Matrix
 from app import app, db
-from helpers import Buffer
+from buffer import Buffer
 from models import User
 
 load_dotenv()
@@ -25,6 +25,7 @@ def logRequest(request):
 
 
 @app.route("/view_logs")
+@login_required
 def viewLogs():
     secretKey = request.args.get("key")
     if secretKey == os.getenv("KEY"):
@@ -47,15 +48,15 @@ def register():
     login = request.form.get("login")
     password = request.form.get("password")
     password2 = request.form.get("password2")
-
     if request.method == "POST":
         if not (login or password or password2):
             flash("Please fill all fields!")
         elif password2 != password:
             flash("Passwords fields is not equal!")
         else:
+            id = db.session.query(User).order_by(User.id.desc()).first().id + 1
             hash_pwd = generate_password_hash(password)
-            new_user = User(id=1223, login=login, password=hash_pwd)
+            new_user = User(id=id, login=login, password=hash_pwd)
             db.session.add(new_user)
             db.session.commit()
             return redirect(url_for("login"))
@@ -76,103 +77,85 @@ def login():
         else:
             flash("Login or password is incorrect!")
             return redirect(url_for("login"))
-
     else:
         flash("Please fill Login and Password in fields!")
         return render_template("auth/login.html")
 
 
 @app.route("/logout", methods=["POST", "GET"])
+@login_required
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for("login"))
 
 
 @app.route("/mode", methods=["POST", "GET"])
+@login_required
 def mode():
-    return render_template("mode.html")
+    userName = current_user.login
+    return render_template("mode.html", userName=userName)
 
 
 @app.route("/tables", methods=["POST", "GET"])
-def aaa():
+@login_required
+def takeMode():
     userChoose = request.form["choose"]
-    if userChoose == "2":
-        return render_template("matr/two_matrs.html")
-    elif userChoose == "1":
-        return render_template("matr/one_matr.html")
+    userName = current_user.login
+    if userChoose == "two matrixes":
+        return render_template("matr/two_matrs.html", userName=userName)
+    elif userChoose == "one matrix":
+        return render_template("matr/one_matr.html", userName=userName)
 
 
-@app.route("/calc/<string:set>", methods=["POST", "GET"])
+@app.route("/calc/mode_<string:set>", methods=["POST", "GET"])
+@login_required
 def calc(set):
     buffer = Buffer()
     buffer.getRequestData(request, set)
     buffer.sizeUnpack()
-
-    if set == "two_matrix":
-        if buffer.response["req_code"] == 200:
-            firstMatrix = Matrix(buffer.takeMatrData(1))
+    userName = current_user.login
+    if buffer.response["req_code"] == 200:
+        firstMatrix = Matrix(buffer.takeMatrData(1))
+        if set == "two_matrix":
             secondMatrix = Matrix(buffer.takeMatrData(2))
             if buffer.operation == "➕":
                 data = firstMatrix.summation(secondMatrix)
             elif buffer.operation == "✖":
                 data = firstMatrix.multiply(secondMatrix)
-
-            if data["calc"]["code"] == 200:
-                return render_template(
-                    "calc.html",
-                    rows=data["rows"],
-                    cols=data["cols"],
-                    matrix=data["matr"],
-                )
-            else:
-                return render_template(
-                    "error.html",
-                    code=data["calc"]["code"],
-                    response=data["calc"]["mess"],
-                )
-        else:
-            return render_template(
-                "error.html",
-                code=buffer.response["req_code"],
-                response=buffer.response["mess"],
-            )
-    elif set == "one_matrix":
-        if buffer.response["req_code"] == 200:
-            firstMatrix = Matrix(buffer.takeMatrData(1))
+        elif set == "one_matrix":
             if buffer.operation == "transpose":
                 data = firstMatrix.transpose()
-                if data["calc"]["code"] == 200:
-                    return render_template(
-                        "calc.html",
-                        rows=data["rows"],
-                        cols=data["cols"],
-                        matrix=data["matr"],
-                    )
-                else:
-                    return render_template(
-                        "error.html",
-                        code=data["calc"]["code"],
-                        response=data["calc"]["mess"],
-                    )
             elif buffer.operation == "determin":
                 data = firstMatrix.findDet()
-                if data["calc"]["code"] == 200:
-                    return render_template(
-                        "calc.html",
-                        rows=data["rows"],
-                        cols=data["cols"],
-                        matrix=data["matr"],
-                        det=data["det"],
-                    )
-                else:
-                    return render_template(
-                        "error.html",
-                        code=data["calc"]["code"],
-                        response=data["calc"]["mess"],
-                    )
+            elif buffer.operation == "inverse":
+                data = firstMatrix.inverse()
+
+        if data["calc"]["code"] == 200:
+
+            def tryTakeDet():
+                try:
+                    return data["det"]
+                except KeyError:
+                    return ""
+
+            return render_template(
+                "calc.html",
+                rows=data["rows"],
+                cols=data["cols"],
+                matrix=data["matr"],
+                det=tryTakeDet(),
+                userName=userName,
+            )
         else:
-            print("aaaa")
             return render_template(
                 "error.html",
-                code=buffer.response["req_code"],
-                response=buffer.response["mess"],
+                code=data["calc"]["code"],
+                response=data["calc"]["mess"],
             )
+
+
+@app.after_request
+def redirectToSignin(response):
+    if response.status_code == 401:
+        return redirect(url_for("login"))
+    return response
