@@ -1,5 +1,5 @@
 
-# Matrix Calculate
+# 🎲 Matrix Calculate
 
 There is a simple matrix calculator created by one person.
 
