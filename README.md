@@ -1,10 +1,11 @@
+# <div align="center">🎲 Matrix Calculate
+</div>  
 
-# 🎲 Matrix Calculate
 
 There is a simple matrix calculator created by one person.
-
+<div align="center">
 ![matr_pctr](https://github.com/kudras3r/MatrixCalculate/assets/109919639/99eaf8c2-e855-404b-9b06-ff93ec404bc3)
-
+</div>  
 
 ## Demo
 
