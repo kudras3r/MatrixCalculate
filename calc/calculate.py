@@ -24,14 +24,20 @@ class Matrix:
     def summation(self, matr2):
         data = {}
         try:
-            data = {
-                "matr": np.add(self.matrix, matr2.matrix),
-                "rows": self.rows,
-                "cols": self.cols,
-                "calc": {
-                    "code": 200,
-                },
-            }
+            if self.rows == matr2.rows and self.cols == matr2.cols:
+                data = {
+                    "matr": np.add(self.matrix, matr2.matrix),
+                    "rows": self.rows,
+                    "cols": self.cols,
+                    "calc": {
+                        "code": 200,
+                    },
+                }
+            else:
+                data["calc"] = {
+                    "code": 400,
+                    "mess": "Invalid size!",
+                }
         except IndexError:
             data["calc"] = {
                 "code": 400,
@@ -76,7 +82,6 @@ class Matrix:
                     "code": 400,
                     "mess": "Invalid size!",
                 }
-
         return data
 
     def transpose(self):
@@ -126,7 +131,3 @@ class Matrix:
                 "mess": "We could not find inverse matrix!",
             }
         return data
-
-
-#
-# pr#int(a.)

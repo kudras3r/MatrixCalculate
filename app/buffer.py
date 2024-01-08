@@ -50,7 +50,6 @@ class Buffer:
         if self.sizeData != [""]:
             for item in self.sizeData[-2::-1]:
                 s = item.split(";")
-                #  print(item)
                 c = 0
                 if c != 2:
                     matrKey = "matr1" if s[0][-1] == "1" else "matr2"

@@ -4,6 +4,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.exc import IntegrityError
 
 import sys
 import os
@@ -57,9 +58,13 @@ def register():
             id = db.session.query(User).order_by(User.id.desc()).first().id + 1
             hash_pwd = generate_password_hash(password)
             new_user = User(id=id, login=login, password=hash_pwd)
-            db.session.add(new_user)
-            db.session.commit()
-            return redirect(url_for("login"))
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect(url_for("login"))
+            except IntegrityError:
+                flash("Login is not unique!")
+                return redirect(url_for("register"))
     return render_template("auth/register.html")
 
 
@@ -67,10 +72,8 @@ def register():
 def login():
     login = request.form.get("login")
     password = request.form.get("password")
-    print(login, type(login))
     if login and password:
         user = User.query.filter_by(login=login).first()
-        print(user)
         if check_password_hash(user.password, password):
             login_user(user)
             return redirect(url_for("mode"))
