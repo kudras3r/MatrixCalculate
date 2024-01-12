@@ -1,4 +1,17 @@
+"""
+
+    Created, supported, updated by kudraser
+
+    Contacts
+    tg: https://t.me/kudras3r_dev
+    GitHub: https://github.com/kudras3r
+    vk: https://vk.com/dgcihf
+
+"""
+
 from datetime import datetime
+import sys
+import os
 
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -6,10 +19,7 @@ from dotenv import load_dotenv
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.exc import IntegrityError
 
-import sys
-import os
 from config import CALC_PATH
-
 sys.path.insert(0, CALC_PATH)
 from calculate import Matrix
 from app import app, db
@@ -20,6 +30,9 @@ load_dotenv()
 
 
 def logRequest(request):
+    """
+    Logs the data about the visit to the main page in .log
+    """
     with open("sessions.log", "a") as file:
         log = f"[ {datetime.now()} | {request.user_agent} ]"
         print(log, file=file)
@@ -28,6 +41,9 @@ def logRequest(request):
 @app.route("/view_logs")
 @login_required
 def viewLogs():
+    """
+    Return log page only if correct 'SECRET_KEY' being in url parameters
+    """
     secretKey = request.args.get("key")
     if secretKey == os.getenv("KEY"):
         with open("sessions.log", "r") as file:
@@ -40,12 +56,20 @@ def viewLogs():
 
 @app.route("/", methods=["POST", "GET"])
 def index():
+    """
+    Main page
+    """
     logRequest(request=request)
     return render_template("index.html")
 
 
 @app.route("/register", methods=["POST", "GET"])
 def register():
+    """
+    Return login page if user is correctly register
+    and adding him in db. If user register is incorrect just
+    reload page
+    """
     login = request.form.get("login")
     password = request.form.get("password")
     password2 = request.form.get("password2")
@@ -70,6 +94,10 @@ def register():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
+    """
+    Login user and let him go to the site.
+    If user login is incorrect just reload page
+    """
     login = request.form.get("login")
     password = request.form.get("password")
     if login and password:
@@ -95,6 +123,11 @@ def logout():
 @app.route("/mode", methods=["POST", "GET"])
 @login_required
 def mode():
+    """
+    Accepted only if user is login. And sending his name to template for
+    correctly drawing login in top-left side of page.
+    Gives the user a choice of two modes of working with the matrices
+    """
     userName = current_user.login
     return render_template("mode.html", userName=userName)
 
@@ -102,6 +135,10 @@ def mode():
 @app.route("/tables", methods=["POST", "GET"])
 @login_required
 def takeMode():
+    """
+    Accepted only if user is login. Depending on the choise return one of two
+    matrixes mode
+    """
     userChoose = request.form["choose"]
     userName = current_user.login
     if userChoose == "two matrixes":
@@ -113,6 +150,9 @@ def takeMode():
 @app.route("/calc/mode_<string:set>", methods=["POST", "GET"])
 @login_required
 def calc(set):
+    """
+    Taking data from buffer. Checking status code and try to calculate result matrix
+    """
     buffer = Buffer()
     buffer.getRequestData(request, set)
     buffer.sizeUnpack()
@@ -136,6 +176,12 @@ def calc(set):
         if data["calc"]["code"] == 200:
 
             def tryTakeDet():
+                """
+                In the template, there is an X field for the matrix determinant,
+                the function tries to calculate it, if an error is obtained,
+                then the user is not looking for a determinant.
+                And the template will not to display it (check calc.html line 46)
+                """
                 try:
                     return data["det"]
                 except KeyError:

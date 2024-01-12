@@ -1,4 +1,21 @@
+"""
+
+    Created, supported, updated by kudraser
+
+    Contacts
+    tg: https://t.me/kudras3r_dev
+    GitHub: https://github.com/kudras3r
+    vk: https://vk.com/dgcihf
+
+"""
+
+
 class Buffer:
+    """
+    This class makes the request to the site
+    accept data and send it to view
+    """
+
     def __init__(self):
         self.size: dict = {
             "matr1": {

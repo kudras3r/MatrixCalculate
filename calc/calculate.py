@@ -1,5 +1,15 @@
-import numpy as np
+"""
 
+    Created, supported, updated by kudraser
+
+    Contacts
+    tg: https://t.me/kudras3r_dev
+    GitHub: https://github.com/kudras3r
+    vk: https://vk.com/dgcihf
+
+"""
+
+import numpy as np
 
 class Matrix:
     def __init__(self, data: dict):

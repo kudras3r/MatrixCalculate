@@ -1,3 +1,14 @@
+"""
+
+    Created, supported, updated by kudraser
+
+    Contacts
+    tg: https://t.me/kudras3r_dev
+    GitHub: https://github.com/kudras3r
+    vk: https://vk.com/dgcihf
+
+"""
+
 from app import db, manager
 from flask_login import UserMixin
 
