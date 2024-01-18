@@ -34,6 +34,10 @@ Few features:
 
 - Working on registering and connecting the database - from **26.12.23** to **30.12.23**
 
+- **18.01.24** adding dark mode
+  ![image](https://github.com/kudras3r/MatrixCalculate/assets/109919639/8e56a42c-9c4e-4a21-a56b-fa3baf6c3b97)
+
+
 - WORK! - from **31.12.23** to **eternity**
 
 
