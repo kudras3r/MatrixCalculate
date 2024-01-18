@@ -21,6 +21,7 @@ app.config.from_object(Config)
 manager = LoginManager(app)
 
 db = SQLAlchemy(app)
+app.app_context().push()
 db.create_all()
 
-app.app_context().push()
+#app.app_context().push()

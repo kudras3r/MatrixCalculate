@@ -10,11 +10,33 @@
     {% block styles %}
     
     {% endblock %}
+    <script>
+
+      function themeSwitch() {
+
+        var body = document.querySelector("body");
+
+        if (body.getAttribute("data-bs-theme") == "light") {
+
+          body.setAttribute("data-bs-theme" ,"dark");
+          button = document.getElementById("themeButton");
+          button.setAttribute("value", "light");
+
+        } else {
+
+          body.setAttribute("data-bs-theme" ,"light");
+          button = document.getElementById("themeButton");
+          button.setAttribute("value", "dark")
+
+        }
+      }
+
+    </script>
     {%block scripts %}
-    
+
     {% endblock %}
 </head>
-<body>
+<body data-bs-theme="light">
   <header>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container">
@@ -34,7 +56,11 @@
               <a class="nav-link" href="https://github.com/kudras3r">GitHub</a>
             </li>
           </ul>
-          {% block headright %}
+          <div>
+            <input id="themeButton" value="dark" class="form-control name_list" type="submit" onclick="themeSwitch()" size="2">
+         <!-- <div class="themeSwitch"><input value="dark" class="form-control name_list" onclick="themeSwitch()" name="oper" size="2"></div> -->
+          </div> 
+         {% block headright %}
 
           {% endblock %}
         </div>
